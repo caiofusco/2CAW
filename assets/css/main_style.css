@@ -1,0 +1,133 @@
+/* Variáveis e configurações globais */
+:root {
+    --bs-body-font-family: 'Poppins', sans-serif;
+    --bs-body-bg: #111111;
+    --bs-body-color: #fff;
+    --dark-bg: #1E1E1E;
+}
+
+/* Estilos gerais */
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Navbar */
+.navbar {
+    background-color: var(--dark-bg) !important;
+    padding: 1rem;
+}
+
+.navbar-brand img {
+    width: 90px;
+    height: 25px;
+}
+
+.navbar-nav .nav-link {
+    color: var(--bs-body-color) !important;
+    padding: 0.5rem 1rem;
+}
+
+/* Títulos de seção */
+.section-title {
+    position: relative;
+    margin: 3rem 0;
+    text-align: center;
+}
+
+.section-title::after {
+    content: '';
+    display: block;
+    width: 40%;
+    height: 2px;
+    background-color: #fff;
+    margin: 1rem auto;
+}
+
+/* Carousel */
+.carousel-item img {
+    height: 400px;
+    object-fit: cover;
+}
+
+/* Cards */
+.card {
+    background-color: var(--dark-bg);
+    border: none;
+    margin-bottom: 2rem;
+}
+
+.card-img-top {
+    height: 240px;
+    object-fit: cover;
+}
+
+/* Location section */
+.location-container {
+    position: relative;
+    height: 420px;
+    margin: 2rem 0;
+}
+
+.location-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.location-overlay {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background-color: rgba(30, 30, 30, 0.9);
+    padding: 1rem;
+    border-radius: 5px;
+}
+
+/* Footer */
+footer {
+    background-color: var(--dark-bg);
+    margin-top: auto;
+}
+
+/* Botões */
+.btn-primary {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+}
+
+.btn-success {
+    background-color: #198754;
+    border-color: #198754;
+}
+
+/* Media Queries */
+@media (max-width: 768px) {
+    .carousel-item img {
+        height: 300px;
+    }
+    
+    .location-container {
+        height: 300px;
+    }
+    
+    .section-title::after {
+        width: 60%;
+    }
+}
+
+@media (max-width: 576px) {
+    .navbar-brand img {
+        width: 70px;
+        height: 20px;
+    }
+    
+    .carousel-item img {
+        height: 200px;
+    }
+    
+    .location-container {
+        height: 250px;
+    }
+}

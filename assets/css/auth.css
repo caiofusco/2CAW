@@ -1,0 +1,70 @@
+/* Estilos específicos para páginas de autenticação */
+.auth-container {
+    min-height: calc(100vh - 200px); /* Altura total - (navbar + footer) */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 0;
+}
+
+.auth-card {
+    background-color: var(--dark-bg);
+    border-radius: 10px;
+    padding: 2rem;
+    width: 100%;
+    max-width: 450px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.auth-title {
+    text-align: center;
+    margin-bottom: 2rem;
+    font-weight: 600;
+}
+
+.auth-form .form-label {
+    color: var(--bs-body-color);
+    font-weight: 500;
+}
+
+.auth-form .form-control {
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: var(--bs-body-color);
+    padding: 0.75rem 1rem;
+}
+
+.auth-form .form-control:focus {
+    background-color: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.3);
+    box-shadow: 0 0 0 0.25rem rgba(255, 255, 255, 0.1);
+    color: var(--bs-body-color);
+}
+
+.auth-form .form-text {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.auth-form .form-text a {
+    color: var(--bs-body-color);
+}
+
+.auth-form a {
+    color: #0d6efd;
+}
+
+.auth-form a:hover {
+    color: #0b5ed7;
+}
+
+/* Responsividade */
+@media (max-width: 576px) {
+    .auth-card {
+        padding: 1.5rem;
+        margin: 1rem;
+    }
+
+    .auth-container {
+        padding: 1rem 0;
+    }
+}
