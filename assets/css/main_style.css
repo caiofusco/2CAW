@@ -102,6 +102,13 @@ footer {
     border-color: #198754;
 }
 
+.nav-item-logado {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 /* Media Queries */
 @media (max-width: 768px) {
     .carousel-item img {

@@ -61,7 +61,7 @@ $conn->close();
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg">
         <div class="container">
-            <a class="navbar-brand" href="../index.html">
+            <a class="navbar-brand" href="../index.php">
                 <img src="../assets/img/LOGO.png" alt="Logo Principal">
             </a>
         </div>
@@ -103,7 +103,7 @@ $conn->close();
                     
                     <div class="text-center">
                         <span>Já tem uma conta? </span>
-                        <a href="login.html" class="text-decoration-none">Faça login</a>
+                        <a href="login.php" class="text-decoration-none">Faça login</a>
                     </div>
                 </form>
             </div>
