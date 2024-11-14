@@ -1,0 +1,23 @@
+Programas necessários:
+
+XAMPP ou WAMPP
+
+Instruções para utilização do projeto:
+
+1- Baixe o projeto disponibilizado em https://github.com/caiofusco/2CAW
+
+2- Dentro da pasta do XAMPP, localize a pasta htdocs.
+
+3- Crie uma nova pasta para o projeto.
+
+4- Descompacte o .ZIP na pasta.
+
+5- Abra o XAMPP e inicie os serviços de Apache e MySQL.
+
+6- Acesse o painel do phpmyadmin: http://localhost/phpmyadmin/
+
+7- Importe o script de criação do banco, que está localizado na pasta exportacao_banco.
+
+8- Acesse o arquivo db_connection na pasta config e verifique se as credenciais de conexão do banco estão condizentes.
+
+9- Acesse o caminho do projeto no localhost: http://localhost/pasta_do_projeto.
