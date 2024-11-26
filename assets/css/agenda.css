@@ -1,0 +1,22 @@
+.lab {
+    background-color: #f8f9fa;
+    width: 42px;
+    height: 42px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-size: 0.8rem;
+}
+
+.cont-todos {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.container-lab {
+    display: grid;
+    gap: 8px;
+    grid-template-columns: repeat(5, 1fr);
+}

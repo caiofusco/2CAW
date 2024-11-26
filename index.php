@@ -68,8 +68,8 @@ if (isset($_SESSION['user_id'])) {
                 <?php if (!isset($_SESSION['user_id'])): ?>
                 <!-- Se o usuário NÃO estiver logado, mostra os botões de Login e Cadastro -->
                 <div class="d-flex gap-2">
-                    <a href="pages/login.php" class="btn btn-primary">Login</a>
-                    <a href="pages/cadastro.php" class="btn btn-success">Cadastro</a>
+                    <a href="views/login.php" class="btn btn-primary">Login</a>
+                    <a href="views/cadastro.php" class="btn btn-success">Cadastro</a>
                 </div>
                 <?php else: ?>
                 <!-- Se o usuário estiver logado, mostra um botão de Logout e a saudação -->
@@ -78,7 +78,7 @@ if (isset($_SESSION['user_id'])) {
                         <span class="nav-link">Bem-vindo, <?php echo htmlspecialchars($_SESSION['user_name']); ?></span>
                     </li>
                     <li class="nav-item-logado">
-                        <a class="btn btn-danger" href="pages/desconectar.php">SAIR</a>
+                        <a class="btn btn-danger" href="views/desconectar.php">SAIR</a>
                     </li>
                 </div>
                 <?php endif; ?>

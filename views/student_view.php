@@ -1,74 +1,23 @@
 <?php
-session_start(); // Inicia a sessão
+session_start();
+require_once '../config/db_connection.php';
+require_once '../config/auth.php';
 
-require_once '../config/db_connection.php'; // Inclui o arquivo de configuração
+$auth = new Auth($conn);
+$userData = $auth->checkAuth();
 
-// Verifica se o usuário está logado
-if (!isset($_SESSION['user_id'])) {
-    // Se não estiver logado, redireciona para a página de login
-    header("Location: login.php");
-    exit(); // Garante que o restante da página não será carregado
-}
-
-// ID do usuário da sessão
-$userId = $_SESSION['user_id'];
-
-// Evita múltiplos redirecionamentos para usuários já autenticados
-if (!isset($_SESSION['redirect_done'])) {
-    // Consulta para buscar o nome e o tipo do usuário no banco de dados
-    $sql = "SELECT nome, tipo_usuario FROM usuarios WHERE id = ?";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("i", $userId);
-    $stmt->execute();
-    $stmt->bind_result($userName, $userType);
-
-    // Verifica se a consulta obteve um resultado
-    if ($stmt->fetch()) {
-        // Armazena o nome do usuário na sessão para uso futuro
-        $_SESSION['user_name'] = $userName;
-
-        // Define a página de redirecionamento com base no tipo do usuário
-        $redirectPage = '';
-        switch ($userType) {
-            case 'aluno':
-                $redirectPage = "agendamentos.php";
-                break;
-            case 'professor':
-                $redirectPage = "agendamentos_professor.php";
-                break;
-            case 'admin':
-                $redirectPage = "agendamentos_admin.php";
-                break;
-            default:
-                $redirectPage = "erro.html"; // Página de erro para tipos desconhecidos
-        }
-
-        // Marca como redirecionado
-        $_SESSION['redirect_done'] = true;
-
-        // Redireciona o usuário
-        header("Location: $redirectPage");
-        exit(); // Interrompe a execução para evitar problemas
-    } else {
-        // Caso o usuário não seja encontrado, encerra a sessão e redireciona para login
-        session_unset();
-        session_destroy();
-        header("Location: login.php");
-        exit();
-    }
-    $stmt->close();
+if (!$auth->hasPermission('aluno')) {
+    header("Location: ../error.php");
+    exit();
 }
 ?>
-
-
-
 
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Agendamento de Laboratórios</title>
+    <title>Reserva de assentos</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
@@ -279,7 +228,7 @@ if (!isset($_SESSION['redirect_done'])) {
                 <?php if (isset($_SESSION['user_id'])): ?>
                     <div class="d-flex gap-2">
                         <li class="nav-item-logado">
-                            <span class="nav-link">Bem-vindo, <?php echo htmlspecialchars($_SESSION['user_name']); ?></span>
+                            <span class="nav-link">Bem-vindo, <?php echo htmlspecialchars($userData['nome']); ?></span>
                         </li>
                         <li class="nav-item-logado">
                             <a class="btn btn-danger" href="desconectar.php">SAIR</a>
