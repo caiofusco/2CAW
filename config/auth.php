@@ -51,6 +51,24 @@ class Auth {
         $result = $stmt->get_result();
         return $result->fetch_all(MYSQLI_ASSOC);
     }
+    
+    public function getCadeiras() {
+        $sql = "SELECT * FROM laboratorio lb INNER JOIN cadeira cd ON cd.laboratorio_id = lb.id";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        return $result->fetch_all(MYSQLI_ASSOC);
+    }
+
+    public function getLocalizacao($cadeiraId) {
+        $sql = "SELECT nome FROM laboratorio lb INNER JOIN cadeira cd ON cd.laboratorio_id = lb.id
+where cd.id = ?;";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("i", $cadeiraId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        return $result->fetch_all(MYSQLI_ASSOC);
+    }
 
     public function hasPermission($requiredType) {
         $userData = $this->getUserData($_SESSION['user_id']);

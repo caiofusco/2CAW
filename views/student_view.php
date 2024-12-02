@@ -10,10 +10,15 @@ if (!$auth->hasPermission('aluno')) {
     header("Location: ../error.php");
     exit();
 }
-?>
 
+$salas = $auth->getLaboratorios();
+$cadeiras = $auth->getCadeiras();
+
+
+?>
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -22,187 +27,9 @@ if (!$auth->hasPermission('aluno')) {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <link rel="stylesheet" href="../assets/css/main_style.css">
-    <style>
-        :root {
-            --bs-body-font-family: 'Poppins', sans-serif;
-            --bs-body-bg: #111111;
-            --bs-body-color: #fff;
-        }
-
-        body {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .navbar {
-            background-color: #1E1E1E !important;
-            padding: 1rem;
-        }
-
-        .navbar-brand img {
-            width: 90px;
-            height: 25px;
-        }
-
-        .navbar-nav .nav-link {
-            color: var(--bs-body-color) !important;
-            padding: 0.5rem 1rem;
-        }
-
-        .section-title {
-            position: relative;
-            margin: 2rem 0;
-            text-align: center;
-        }
-
-        .section-title::after {
-            content: '';
-            display: block;
-            width: 40%;
-            height: 2px;
-            background-color: #fff;
-            margin: 1rem auto;
-        }
-
-        .lab-card {
-            background-color: #1E1E1E;
-            border: none;
-            margin-bottom: 1rem;
-        }
-
-        .lab-layout {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 2rem;
-            position: relative;
-        }
-
-        .instructor-desk {
-            width: 120px;
-            height: 40px;
-            background-color: #444;
-            margin-bottom: 3rem;
-            border-radius: 5px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.8rem;
-        }
-
-        .desk-row {
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-            margin-bottom: 1.5rem;
-            width: 100%;
-        }
-
-        .desk {
-            background-color: #333;
-            padding: 10px;
-            border-radius: 5px;
-            display: flex;
-            gap: 10px;
-        }
-
-        .seat {
-            width: 35px;
-            height: 35px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.8rem;
-            position: relative;
-        }
-
-        .seat.available {
-            background-color: #198754;
-        }
-
-        .seat.occupied {
-            background-color: #dc3545;
-            cursor: not-allowed;
-        }
-
-        .seat.inoperative {
-            background-color: #6c757d;
-            cursor: not-allowed;
-        }
-
-        .seat:hover.available {
-            transform: scale(1.1);
-        }
-
-        .seat::after {
-            content: attr(data-tooltip);
-            position: absolute;
-            bottom: 100%;
-            left: 50%;
-            transform: translateX(-50%);
-            padding: 4px 8px;
-            background-color: rgba(0, 0, 0, 0.8);
-            border-radius: 4px;
-            font-size: 12px;
-            white-space: nowrap;
-            visibility: hidden;
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-
-        .seat:hover::after {
-            visibility: visible;
-            opacity: 1;
-        }
-
-        .lab-info {
-            background-color: #1E1E1E;
-            padding: 1rem;
-            border-radius: 5px;
-            margin-bottom: 1rem;
-        }
-
-        .screen {
-            width: 80%;
-            height: 5px;
-            background: linear-gradient(to right, transparent, #fff, transparent);
-            margin-bottom: 3rem;
-            position: relative;
-        }
-
-        .screen::after {
-            content: 'QUADRO';
-            position: absolute;
-            top: -25px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 0.8rem;
-            color: #888;
-        }
-
-        .legend-item {
-            display: flex;
-            align-items: center;
-            margin-right: 1rem;
-        }
-
-        .legend-color {
-            width: 20px;
-            height: 20px;
-            border-radius: 3px;
-            margin-right: 0.5rem;
-        }
-
-        footer {
-            background-color: #1E1E1E;
-            margin-top: auto;
-        }
-    </style>
+    <link rel="stylesheet" href="../assets/css/agenda.css">
 </head>
+
 <body>
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg">
@@ -235,112 +62,73 @@ if (!$auth->hasPermission('aluno')) {
                         </li>
                     </div>
                 <?php endif; ?>
-
             </div>
         </div>
     </nav>
 
     <!-- Main Content -->
-    <main class="container my-4">
-        <h2 class="section-title">Agendamento de Laboratórios</h2>
+    <h1 class="mt-4 titulo">Salas Disponíveis</h1>
 
-        <!-- Seleção de Data e Hora -->
-        <div class="row mb-4">
-            <div class="col-md-6">
-                <div class="lab-info">
-                    <h5>Selecione a Data</h5>
-                    <input type="text" id="datePicker" class="form-control bg-dark text-white" placeholder="Selecione a data">
+    <?php if (!empty($salas)): ?>
+        <div class="cont-todos">
+            <?php foreach ($salas as $sala): ?>
+                <?php
+                echo htmlspecialchars($sala['nome']);
+                echo ' - ';
+                echo htmlspecialchars($sala['localizacao']); ?>
+                <div class="mt-2 mb-4 container-lab" sala-id="<?php echo $sala['id']; ?>">
+                    <?php
+
+                    foreach ($cadeiras as $cadeira) {
+
+                        if ($cadeira['laboratorio_id'] == $sala['id']) {
+                            $estado = htmlspecialchars($cadeira['estado']);
+                            $corClasse = '';
+                            if ($estado === 'disponível') {
+                                $corClasse = 'verde';
+                            } elseif ($estado === 'ocupado') {
+                                $corClasse = 'vermelho';
+                            } elseif ($estado === 'inoperante') {
+                                $corClasse = 'cinza';
+                            }
+                            echo '<div class="lab mt-2 ' . $corClasse . '" 
+          cadeira-id="' . $cadeira['id'] . '" 
+          cadeira-estado="' . $estado . '" 
+          cadeira-localizacao="' . htmlspecialchars($cadeira['nome'], ENT_QUOTES, 'UTF-8') . '">
+          <span class="tooltip-custom">' . $estado . '</span>
+      </div>';
+                        }
+                    }
+                    ?>
                 </div>
-            </div>
-            <div class="col-md-6">
-                <div class="lab-info">
-                    <h5>Duração do Agendamento</h5>
-                    <select id="duration" class="form-select bg-dark text-white">
-                        <option value="1">1 hora</option>
-                        <option value="2">2 horas</option>
-                        <option value="3">3 horas</option>
-                        <option value="4">4 horas</option>
-                    </select>
+            <?php endforeach; ?>
+        </div>
+    <?php else: ?>
+        <p>Nenhuma sala encontrada.</p>
+    <?php endif; ?>
+
+    <!-- Modal para confirmar a cadeira -->
+    <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmModalLabel">Confirmação de Reserva</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Usuário: <?php echo htmlspecialchars($userData['nome']); ?></p>
+                    <p>Laboratório: <span id="laboratorioNome"></span></p>
+
+                    Você selecionou a cadeira com ID <span id="cadeiraId"></span>. Deseja confirmar esta ação?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="confirmAction">Confirmar</button>
                 </div>
             </div>
         </div>
+    </div>
 
-        <!-- Legenda -->
-        <div class="lab-info mb-4">
-            <h5>Legenda</h5>
-            <div class="d-flex flex-wrap">
-                <div class="legend-item">
-                    <div class="legend-color bg-success"></div>
-                    <span>Disponível</span>
-                </div>
-                <div class="legend-item">
-                    <div class="legend-color bg-danger"></div>
-                    <span>Ocupado</span>
-                </div>
-                <div class="legend-item">
-                    <div class="legend-color bg-secondary"></div>
-                    <span>Inoperante</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- Laboratories -->
-        <div class="row">
-            <!-- Lab 1 -->
-            <div class="col-12 mb-4">
-                <div class="card lab-card">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <h5 class="card-title">Laboratório 1</h5>
-                            <small class="text-muted">Horário: 08:00 - 22:00</small>
-                        </div>
-                        <div class="lab-layout">
-                            <div class="screen"></div>
-                            <div class="instructor-desk">Mesa do Professor</div>
-                            <div id="lab1Layout"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Lab 2 -->
-            <div class="col-12 mb-4">
-                <div class="card lab-card">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <h5 class="card-title">Laboratório 2</h5>
-                            <small class="text-muted">Horário: 07:00 - 18:00</small>
-                        </div>
-                        <div class="lab-layout">
-                            <div class="screen"></div>
-                            <div class="instructor-desk">Mesa do Professor</div>
-                            <div id="lab2Layout"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Confirmation Modal -->
-        <div class="modal fade" id="confirmationModal" tabindex="-1">
-            <div class="modal-dialog">
-                <div class="modal-content bg-dark">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Confirmar Agendamento</h5>
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                    </div>
-                    <div class="modal-body">
-                        <p>Deseja confirmar o agendamento?</p>
-                        <p id="bookingDetails"></p>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="button" class="btn btn-success" id="confirmBooking">Confirmar</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </main>
 
     <!-- Footer -->
     <footer class="py-4 text-center">
@@ -353,196 +141,90 @@ if (!$auth->hasPermission('aluno')) {
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
     <script>
-        // Initialize date picker
-        flatpickr("#datePicker", {
-            minDate: "today",
-            dateFormat: "Y-m-d",
-        });
-    
-        // Lab configurations
-        const labs = {
-            lab1: {
-                rows: 4,
-                seatsPerDesk: 2,
-                desksPerRow: 3,
-                hours: { start: 8, end: 22 }
-            },
-            lab2: {
-                rows: 3,
-                seatsPerDesk: 2,
-                desksPerRow: 3,
-                hours: { start: 7, end: 18 }
+        // Captura o modal e elementos associados
+        const modal = new bootstrap.Modal(document.getElementById('confirmModal'));
+        const cadeiraIdSpan = document.getElementById('cadeiraId');
+        const laboratorioNomeSpan = document.getElementById('laboratorioNome'); // Novo span para o nome do laboratório
+
+        const confirmButton = document.getElementById('confirmAction');
+
+        // Variável para armazenar o ID da cadeira selecionada
+        let selectedCadeiraId = null;
+        let selectedLaboratorioNome = null; // Novo campo para armazenar o nome do laboratório
+
+
+        // Adiciona event listener para cliques nas divs com classe 'lab'
+        document.addEventListener('click', function(event) {
+            const target = event.target;
+
+            // Verifica se o elemento clicado possui a classe 'lab'
+            if (target.classList.contains('lab')) {
+                const estado = target.getAttribute('cadeira-estado');
+
+
+                if (estado === 'disponível') {
+                    // Exibe o modal apenas para cadeiras disponíveis
+                    selectedCadeiraId = target.getAttribute('cadeira-id');
+                    selectedLaboratorioNome = target.getAttribute('cadeira-localizacao'); // Captura o nome do laboratório
+                    cadeiraIdSpan.textContent = selectedCadeiraId;
+                    laboratorioNomeSpan.textContent = selectedLaboratorioNome; // Atualiza o nome do laboratório no modal
+                    modal.show();
+                }
             }
-        };
-    
-        // Generate lab layout
-        function generateLabLayout(labId, config) {
-            const container = document.getElementById(`${labId}Layout`);
-            let seatCount = 0;
-    
-            for (let row = 0; row < config.rows; row++) {
-                const deskRow = document.createElement('div');
-                deskRow.className = 'desk-row';
-    
-                for (let desk = 0; desk < config.desksPerRow; desk++) {
-                    const deskElement = document.createElement('div');
-                    deskElement.className = 'desk';
-    
-                    for (let seat = 0; seat < config.seatsPerDesk; seat++) {
-                        seatCount++;
-                        const seatElement = document.createElement('div');
-                        seatElement.className = 'seat available';
-                        seatElement.textContent = seatCount;
-                        
-                        // Add tooltip with position information
-                        seatElement.setAttribute('data-tooltip', `Fila ${row + 1}, Mesa ${desk + 1}, Assento ${seat + 1}`);
-    
-                        // Randomly set some seats as occupied or inoperative for demonstration
-                        const random = Math.random();
-                        if (random < 0.2) {
-                            seatElement.className = 'seat occupied';
-                        } else if (random < 0.3) {
-                            seatElement.className = 'seat inoperative';
+        });
+
+        document.addEventListener('mouseover', function(event) {
+            const target = event.target;
+
+            if (target.classList.contains('lab')) {
+                const estado = target.getAttribute('cadeira-estado');
+                const tooltip = target.querySelector('.tooltip-custom');
+                if (tooltip) {
+                    tooltip.textContent = estado.charAt(0).toUpperCase() + estado.slice(1); // Capitaliza o estado
+                }
+
+            }
+        });
+
+        // Evento para o botão "Confirmar" no modal
+        confirmButton.addEventListener('click', function() {
+            if (selectedCadeiraId) {
+                // Envia o ID da cadeira para o servidor
+                fetch('../config/update_cadeira.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        body: `cadeira_id=${selectedCadeiraId}`,
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            console.log(data.message);
+                            alert('Cadeira atualizada com sucesso!');
+                            modal.hide();
+
+                            // Atualiza o estado visual da cadeira na página
+                            const cadeiraElement = document.querySelector(`.lab[cadeira-id="${selectedCadeiraId}"]`);
+                            if (cadeiraElement) {
+                                cadeiraElement.setAttribute('cadeira-estado', 'ocupado');
+                                cadeiraElement.classList.remove('verde');
+                                cadeiraElement.classList.add('vermelho');
+                            }
+                        } else {
+                            console.error(data.message);
+                            alert('Erro ao atualizar a cadeira.');
                         }
-    
-                        seatElement.addEventListener('click', () => handleSeatClick(labId, seatCount, seatElement));
-                        deskElement.appendChild(seatElement);
-                    }
-    
-                    deskRow.appendChild(deskElement);
-                }
-    
-                container.appendChild(deskRow);
-            }
-        }
-    
-        // Handle seat selection
-        function handleSeatClick(labId, seatNumber, seatElement) {
-            if (seatElement.classList.contains('available')) {
-                const date = document.getElementById('datePicker').value;
-                const duration = document.getElementById('duration').value;
-                
-                if (!date) {
-                    alert('Por favor, selecione uma data primeiro.');
-                    return;
-                }
-    
-                const modal = new bootstrap.Modal(document.getElementById('confirmationModal'));
-                document.getElementById('bookingDetails').innerHTML = `
-                    Laboratório: ${labId.toUpperCase()}<br>
-                    Cadeira: ${seatNumber}<br>
-                    Posição: ${seatElement.getAttribute('data-tooltip')}<br>
-                    Data: ${date}<br>
-                    Duração: ${duration} hora(s)
-                `;
-                modal.show();
-    
-                document.getElementById('confirmBooking').onclick = () => {
-                    seatElement.className = 'seat occupied';
-                    modal.hide();
-                    alert('Agendamento confirmado com sucesso!');
-                };
-            }
-        }
-    
-        // Initialize labs
-        generateLabLayout('lab1', labs.lab1);
-        generateLabLayout('lab2', labs.lab2);
-
-        // Helper functions
-        function formatTimeSlot(hour) {
-            return `${hour.toString().padStart(2, '0')}:00`;
-        }
-
-        // Initialize tooltips
-        const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-        const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-            return new bootstrap.Tooltip(tooltipTriggerEl);
-        });
-
-        // Responsive adjustments
-        function adjustLayoutForScreenSize() {
-            const labLayouts = document.querySelectorAll('.lab-layout');
-            if (window.innerWidth < 768) {
-                labLayouts.forEach(layout => {
-                    layout.style.transform = 'scale(0.8)';
-                });
-            } else {
-                labLayouts.forEach(layout => {
-                    layout.style.transform = 'scale(1)';
-                });
-            }
-        }
-
-        // Event listeners
-        window.addEventListener('resize', adjustLayoutForScreenSize);
-        window.addEventListener('load', adjustLayoutForScreenSize);
-
-        // Date validation
-        document.getElementById('datePicker').addEventListener('change', function(e) {
-            const selectedDate = new Date(e.target.value);
-            const today = new Date();
-            
-            if (selectedDate < today) {
-                alert('Por favor, selecione uma data futura.');
-                e.target.value = '';
+                    })
+                    .catch(error => {
+                        console.error('Erro na requisição:', error);
+                        alert('Erro na comunicação com o servidor.');
+                    });
             }
         });
-
-        // Save booking data to localStorage
-        function saveBooking(bookingData) {
-            let bookings = JSON.parse(localStorage.getItem('labBookings')) || [];
-            bookings.push(bookingData);
-            localStorage.setItem('labBookings', JSON.stringify(bookings));
-        }
-
-        // Check if seat is already booked
-        function isSeatBooked(labId, seatNumber, date) {
-            const bookings = JSON.parse(localStorage.getItem('labBookings')) || [];
-            return bookings.some(booking => 
-                booking.labId === labId && 
-                booking.seatNumber === seatNumber && 
-                booking.date === date
-            );
-        }
-
-        // Error handling
-        window.addEventListener('error', function(e) {
-            console.error('Erro na aplicação:', e.message);
-            alert('Ocorreu um erro. Por favor, tente novamente mais tarde.');
-        });
-
-        // Clean up old bookings
-        function cleanupOldBookings() {
-            let bookings = JSON.parse(localStorage.getItem('labBookings')) || [];
-            const today = new Date();
-            bookings = bookings.filter(booking => new Date(booking.date) >= today);
-            localStorage.setItem('labBookings', JSON.stringify(bookings));
-        }
-
-        // Run cleanup on page load
-        cleanupOldBookings();
-
-        // Add keyboard navigation
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                const modal = bootstrap.Modal.getInstance(document.getElementById('confirmationModal'));
-                if (modal) modal.hide();
-            }
-        });
-
-        // Mobile detection
-        function isMobile() {
-            return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-        }
-
-        // Adjust UI for mobile devices
-        if (isMobile()) {
-            document.querySelectorAll('.desk-row').forEach(row => {
-                row.style.gap = '1rem';
-            });
-        }
     </script>
+
 </body>
 </html>

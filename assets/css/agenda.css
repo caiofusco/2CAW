@@ -1,11 +1,22 @@
 .lab {
-    background-color: #f8f9fa;
     width: 42px;
     height: 42px;
     border-radius: 4px;
     cursor: pointer;
     transition: all 0.3s;
     font-size: 0.8rem;
+}
+
+.lab.verde {
+    background-color: green;
+}
+
+.lab.vermelho {
+    background-color: red;
+}
+
+.lab.cinza {
+    background-color: gray;
 }
 
 .cont-todos {
@@ -17,6 +28,29 @@
 
 .container-lab {
     display: grid;
-    gap: 8px;
-    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+    grid-template-columns: repeat(8, 1fr);
+}
+
+.titulo {
+    padding: 1rem;
+    color: white;
+    text-align: center;
+}
+
+.tooltip-custom {
+    pointer-events: none;
+    position: absolute;
+    background-color: #000;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 12px;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+.lab:hover .tooltip-custom {
+    visibility: visible;
+    opacity: 1;
 }
