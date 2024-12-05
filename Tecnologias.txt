@@ -1,0 +1,6 @@
+Tecnologias utilizadas: 
+- HTML
+- CSS
+- JAVASCRIPT
+- PHP
+- MYSQL
